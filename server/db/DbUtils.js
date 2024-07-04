@@ -2,7 +2,7 @@ const sqlite3=require("sqlite3").verbose()
 const GenId=require("../utils/SnowFlake")
 const path=require("path")    
 
-var db=new sqlite3.Database(path.join(__dirname,"warehouse.sqlite"))
+var db=new sqlite3.Database(path.join(__dirname,"library.sqlite3"))
 const genid=new GenId({WorkerId:1})//机器码 SnowFlake的要求
 
 db.async={}

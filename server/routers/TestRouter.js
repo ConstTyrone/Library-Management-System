@@ -3,16 +3,16 @@ const router = express.Router()
 const {db,genid}=require("../db/DbUtils")
 
 router.get("/test",async(req,res)=>{//回调函数 允许异步
-    db.all("select * from `admin`",[],(err,rows)=>{
+    db.all("select * from `User`",[],(err,rows)=>{
         console.log(rows)
     })
 
-    db.async.all("select * from`admin`",[]).then((res)=>{
+    db.async.all("select * from`User`",[]).then((res)=>{
         console.log(res)
 
     })
 
-    let out=await db.async.all("select * from`admin`",[]);
+    let out=await db.async.all("select * from`User`",[]);
 
     res.send({
         id:genid.NextId(),
@@ -22,4 +22,8 @@ router.get("/test",async(req,res)=>{//回调函数 允许异步
 
 })
 
+
 module.exports=router
+
+
+
