@@ -120,6 +120,7 @@ router.get("/_token/search", async (req, res) => {
             msg: "查询成功",
             data: {
                 keyword,
+                borrowable,
                 page,
                 pageSize,
                 rows: searchResult.rows,
