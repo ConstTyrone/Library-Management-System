@@ -38,23 +38,18 @@ router.get("/_token/search", async (req, res) => {
      */
     let { bookid, cardid, page, pageSize } = req.query//query和body不一样！
 
-    page = page == null ? 1 : page;//增加默认值
-    pageSize = pageSize == null ? 5 : pageSize//默认每页5本书
-
-    keyword = keyword == null ? "" : keyword
+    page = page == '' ? 1 : page;//增加默认值
+    pageSize = pageSize == '' ? 5 : pageSize//默认每页5本书
 
     let params = []//查询参数
     let whereSqls = []//查询语句的条件
 
-    bookid = parseInt(bookid);
-    cardid = parseInt(cardid);
-
-    if (bookid != null){
+    if (bookid != '' ){
         whereSqls.push(" (`bookid` = ? ) ")
         params.push(bookid)
     }
 
-    if (cardid != null){
+    if (cardid != '' ){
         whereSqls.push(" (`cardid` = ? ) ")
         params.push(cardid)
     }
@@ -78,7 +73,7 @@ router.get("/_token/search", async (req, res) => {
     let searchResult = await db.async.all(searchSql, searchSqlParams)
     let countResult = await db.async.all(searchCountSql, searchCountParams)
 
-    console.log(searchSql, countResult)
+    console.log(searchSql, searchSqlParams)
 
     if (searchResult.err == null && countResult.err == null) {
         res.send({//返回给前端
@@ -95,6 +90,8 @@ router.get("/_token/search", async (req, res) => {
         })
 
     } else {
+        console.log(searchResult.err)
+        console.log(countResult.err)
         res.send({
             code: 500,
             msg: "查询失败",
@@ -132,6 +129,7 @@ router.delete("/_token/admin/deletefortime", async (req, res) => {
         let { millisecond } = req.body;
         let time_now = new Date().getTime();
         time = time_now - parseInt(millisecond)
+        //console.log(time)
     }catch(error){
         console.log(error);
         res.send({
@@ -163,7 +161,7 @@ router.delete("/_token/admin/deletefortime", async (req, res) => {
 router.put("/_token/admin/update", async (req, res) => {//  /_token/update
 
     let { bookid, cardid, loan_date, returned_date, bookid_new, cardid_new, loan_date_new, returned_date_new } = req.body;
-    const update_sql = "UPDATE `ReturnedLoan` SET `bookid`=? , `cardid` = ? , `loan_date` = ? , `returned_date` = ? WHERE `bookid` = ? , `cardid` = ? , `loan_date` = ? , `returned_date` = ?"
+    const update_sql = "UPDATE `ReturnedLoan` SET `bookid`=? , `cardid` = ? , `loan_date` = ? , `returned_date` = ? WHERE `bookid` = ? AND `cardid` = ? AND `loan_date` = ? AND `returned_date` = ?"
     let params = [ bookid_new, cardid_new, loan_date_new, returned_date_new, bookid, cardid, loan_date, returned_date ]
     let result = await db.async.run(update_sql, params)
 

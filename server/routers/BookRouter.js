@@ -74,9 +74,9 @@ router.get("/_token/search", async (req, res) => {
     let { keyword, borrowable, page, pageSize } = req.query//query和body不一样！
 
     page = page == null ? 1 : page;//增加默认值
-    pageSize = pageSize == null ? 5 : pageSize//默认每页5本书
+    pageSize = pageSize == '' ? 5 : pageSize//默认每页5本书
 
-    keyword = keyword == null ? "" : keyword
+    keyword = keyword == '' ? "" : keyword
 
     let params = []//查询参数
     let whereSqls = []//查询语句的条件
