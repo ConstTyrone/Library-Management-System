@@ -2,7 +2,7 @@ const sqlite3=require("sqlite3").verbose()
 const GenId=require("../utils/SnowFlake")
 const path=require("path")    
 
-var db=new sqlite3.Database(path.join(__dirname,"blog.sqlite3"))
+var db=new sqlite3.Database(path.join(__dirname,"library.sqlite3"))
 const genid=new GenId({WorkerId:1})//机器码 SnowFlake的要求
 
 db.async={}
@@ -15,7 +15,7 @@ db.async.all=(sql,params)=> {
     })
 }
 
-db.async.run=(sql,params)=> {
+db.async.run=(sql,params)=> {//update add
     return new Promise((resolve,reject)=>{
         db.run(sql,params,(err,rows)=>{
             resolve({err,rows})

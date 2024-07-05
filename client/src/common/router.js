@@ -9,15 +9,13 @@ let routes = [
         {path: "/dashboard/category", component: () =>import("../views/dashboard/Category.vue")},
         {path: "/dashboard/article", component: () =>import("../views/dashboard/Article.vue")},
     ] },
-    { path: "/", component: () => import("../views/Homepage.vue") },
-    { path: "/detail", component: () => import("../views/Detail.vue") },
-    { path: "/file", component: () => import("../views/File.vue") },
-    { path: "/tag", component: () => import("../views/Tag.vue") },
-    { path: "/about", component: () => import("../views/About.vue") },
-    { path: "/classify", component: () => import("../views/Classify.vue") },
-
-
-    
+    { path: "/", component: () => import("../views/Login.vue") },
+    {path:"/user",component:()=>import("../views/User_view.vue")},
+    {path:"/master",component:()=>import("../views/Master_view.vue")},
+    {path:"/unusedOrder",component:()=>import("../views/User_view.vue")},
+    {path:"/usedOrder",component:()=>import("../views/Master_view.vue")},
+    {path:"/userOrder",component:()=>import("../views/User_control.vue")},
+    {path:"/advices",component:()=>import("../views/Dataform.vue")}
 ]
 
 const router = createRouter({
