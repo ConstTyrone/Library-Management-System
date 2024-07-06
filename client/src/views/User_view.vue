@@ -1,78 +1,68 @@
 <template>
-  <div class="login-container">
-    <ChildComponent />
-    <div class="img1">
-      <img src="../medias/login.png" />
-    </div>
-    <div class="search-container">
-      <input
-        type="text"
-        class="search-input"
-        v-model="searchQuery"
-        placeholder="请输入搜索内容"
-      />
-      <button class="search-button" @click="performSearch">搜索</button>
-    </div>
+  <div>
+    <h2>Search Books</h2>
+    <form @submit.prevent="searchBooks">
+      <input v-model="keyword" placeholder="Keyword" />
+      <select v-model="borrowable">
+        <option value="">All</option>
+        <option value="1">Borrowable</option>
+        <option value="0">Not Borrowable</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+    <ul>
+      <li v-for="book in books" :key="book.bookid">{{ book.title }} by {{ book.author }}</li>
+    </ul>
+    <p v-if="message">{{ message }}</p>
   </div>
 </template>
-<script setup>
-import { ref } from 'vue';
-import ChildComponent from './Test.vue';
-const searchQuery = ref(''); // 使用ref创建响应式数据
+<script>
+import axios from 'axios';
+import PubSub from 'pubsub-js';
+export default {
+    name: 'SearchBooks',
+  data() {
+    return {
+      token: '',
+      keyword: '',
+      borrowable: '',
+      books: [],
+      message: ''
+    };
+  },
+  methods: {
+    async searchBooks() {
+      try {
+        const response = await axios.get('/book/_token/search', {
+          headers: {
+              token:this.token
+            },
+          params: {
+            keyword: this.keyword,
+            borrowable: this.borrowable
+          }
+        } 
+          );
+        console.log('Response:', response);
+        
+        if (response.data && response.data.data && response.data.data.rows) {
 
-function performSearch() {
-  if (searchQuery.value.trim() !== '') {
-    console.log('搜索内容:', searchQuery.value);
-    // 这里可以调用API进行搜索或执行其他搜索逻辑
-    // 例如: this.$emit('search', searchQuery.value);
+          this.books = response.data.data.rows;
+          this.message = 'Search successful';
+        } else {
+          this.message = 'No books found';
+        }
+      } catch (error) {
+        console.error('Error searching books:', error);
+        this.message = 'Error searching books';
+      }
+    }
+  },
+  mounted() {
+    PubSub.subscribe('userEvent', (name, data) => {
+      this.token = data
+      console.log(this.token)
+    })
   }
-}
+};
 </script>
-<style lang="scss" scoped>
-.login-container {
-  height: 100vh;
-  background-color: rgb(196, 213, 209);
-  position: relative;
-}
-.img1 {
-  top: 10%;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%, 0);
-}
-.img1 img {
-  margin: 0 auto;
-}
-.search-container {
-  
-  position: absolute;
-  top:40%;
-  left:30%;
-  align-items: center;
-}
-
-.search-input {
-    width: 500px;
-  flex: 1;
-  margin-right: 10px;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.search-button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.search-button:hover {
-  background-color: #0056b3;
-}
-</style>

@@ -12,10 +12,9 @@ let routes = [
     { path: "/", component: () => import("../views/Login.vue") },
     {path:"/user",component:()=>import("../views/User_view.vue")},
     {path:"/master",component:()=>import("../views/Master_view.vue")},
-    {path:"/unusedOrder",component:()=>import("../views/User_view.vue")},
+    {path:"/SerchBooks",component:()=>import("../views/User_view.vue")},
     {path:"/usedOrder",component:()=>import("../views/Master_view.vue")},
-    {path:"/userOrder",component:()=>import("../views/User_control.vue")},
-    {path:"/advices",component:()=>import("../views/Dataform.vue")}
+    {path:"/userOrder",component:()=>import("../views/User_control.vue")}
 ]
 
 const router = createRouter({

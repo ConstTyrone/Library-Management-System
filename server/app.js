@@ -76,8 +76,8 @@ app.all("*", async (req, res, next) => {
 
 app.use("/test",require("./routers/TestRouter"))// 加载TestRouter模块，用于处理/test相关的路由请求
 app.use("/user",require("./routers/UserRouter"))
-
-
+app.use("/book",require("./routers/BookRouter"))
+//app.use("/reader",require("./routers/ReaderRouter"))
 
 app.get("/",(req,res)=>{
     res.send("helloworld")

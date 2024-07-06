@@ -25,13 +25,10 @@
   import { ref } from 'vue';
   import ChildComponent from './Test.vue';
   
-  
-  function performSearch() {
+  import axios from 'axios'; // 确保安装了 axios
 
-  }
   import { h, defineComponent } from "vue";
-  import { NTag, NButton, useMessage } from "naive-ui";
-  
+  import { NTag, NButton, useMessage, NSpace, NDataTable } from 'naive-ui';
 
   const createColumns = ({
     sendMail
@@ -46,60 +43,47 @@
         key: "age"
       },
 
-    //   {
-    //     title: "操作",
-    //     key: "actions",
-    //     render(row) {
-    //       return h(
-    //         NButton,
-    //         {
-    //           size: "small",
-    //           onClick: () => sendMail(row)
-    //         },
-    //         { default: () => "修改" }
-    //       );
-    //     }
-    //   }
+
     ];
   };
-  //数据库待传参
-  const createData = () => [
-    {
-      key: 0,
-      name: "abcde",
-      age: "12345",
-    },
-    {
-      key: 1,
-      name: "fghij",
-      age: "6789",
-    },
-    {
-      key: 2,
-      name: "nkcs",
-      age: "15973",
-    }
-  ];
-  
+
+
   export default defineComponent({
     components: {
     ChildComponent,
+    NSpace,
+    NDataTable,
+    NTag,
+    NButton
   },
     setup() {
       const message = useMessage();
+      const data=ref([]);
+      const fetchData = async () => {
+      try {
+        const response = await axios.get("/user/_token/admin/list"); // 发送 GET 请求到API
+        if (response.data.code === 200) {
+          // data.value = response.data.rows; // 将响应数据赋值给 data
+          console.log(response.data.rows);
+        } else {
+          message.error("查询失败: " + response.data.msg);
+        }
+      } catch (error) {
+        message.error("网络请求失败: " + error.message);
+      }
+    };
+      fetchData();
       return {
-        data: createData(),
+        data,
         columns: createColumns({
-          sendMail(rowData) {
-            message.info("send mail to " + rowData.name);
-          }
+
         }),
         pagination: {
-          pageSize: 10
+          pageSize: 5
         }
       };
 
-    }
+  }
   });
 
   </script>
@@ -145,8 +129,8 @@
 .custom-table {
         position:absolute;
         width:40%;
-        left:29%;
-        top:55%;
+        left:30%;
+        top:60%;
         transform: translate(0,-50%);
         margin-top: -40px;
  /* 举例：设置上边距 */

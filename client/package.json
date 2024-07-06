@@ -13,7 +13,9 @@
     "axios": "^1.6.8",
     "echarts": "^5.5.0",
     "echarts-wordcloud": "^2.1.0",
+    "element-plus": "^2.7.6",
     "pinia": "^2.1.7",
+    "pubsub-js": "^1.9.4",
     "sass": "^1.76.0",
     "vue": "^3.4.21",
     "vue-router": "^4.3.2"

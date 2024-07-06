@@ -29,16 +29,16 @@
           <n-tab-pane name="signup" tab="注册">
             <n-form>
               <n-form-item-row label="用户名">
-                <n-input />
+                <n-input v-model:value="createAccounter" placeholder="请输入账号"/>
               </n-form-item-row>
               <n-form-item-row label="密码">
-                <n-input />
+                <n-input v-model:value="createPassword" type="password" placeholder="请输入密码"/>
               </n-form-item-row>
-              <n-form-item-row label="重复密码">
-                <n-input />
+              <n-form-item-row label="输入账户">
+                <n-input v-model:value="createIdentity" placeholder="请输入账户"/>
               </n-form-item-row>
             </n-form>
-            <n-button @click="register" type="primary" block secondary strong>
+            <n-button @click="createAccount" type="primary" block secondary strong>
               注册
             </n-button>
           </n-tab-pane>
@@ -49,50 +49,119 @@
 </template>
 
 <script>
-import axios from "axios";
-import ChildComponent from "./Test.vue";
-export default {
-  components: {
-    ChildComponent,
-  },
-  data() {
-    return {
-      loginAccount: "",
-      loginPassword: "",
-      createAccount: "",
-      createPassword: "",
-      createIdentity: "",
-      updateId: "",
-      updateAccount: "",
-      updatePassword: "",
-      updateIdentity: "",
-      accounts: [],
-      token: "",
-    };
-  },
-  methods: {
-    async login() {
-      try {
-        const response = await axios.post("/user/login", {
-          account: this.loginAccount,
-          password: this.loginPassword,
-        });
-        if (response.data.code === 200) {
-          console.log(this.loginAccount);
-          console.log(this.loginPassword);
-          this.token = response.data.data.token;
-          alert("Login successful");
-          this.$router.push("/user");
-        } else {
-          alert("Login failed");
-        }
-      } catch (error) {
-        alert("Login error");
-      }
+  import axios from 'axios';
+  import PubSub from 'pubsub-js'
+  export default {
+    data() {
+      return {
+        loginAccount: '',
+        loginPassword: '',
+        createAccounter: '',
+        createPassword: '',
+        createIdentity: '',
+        updateId: '',
+        updateAccounter: '',
+        updatePassword: '',
+        updateIdentity: '',
+        accounts: [],
+        token: ''
+      };
     },
-  },
-};
-</script>
+    methods: {
+      async login() {
+        try {
+          const response = await axios.post('/user/login', {
+            account: this.loginAccount,
+            password: this.loginPassword
+          });
+          if (response.data.code === 200) {
+            this.token = response.data.data.token;
+            alert('Login successful');
+          } else {
+            alert('Login failed');
+          }
+        } catch (error) {
+          alert('Login error');
+        }
+        PubSub.publish('userEvent', this.token) // 发布消息
+        console.log(this.token)
+        this.$router.push({
+          path: '/SerchBooks'
+        })
+      },
+
+      async createAccount() {
+        try {
+          const response = await axios.put('/user/_token/admin/add', {
+            account: this.createAccounter,
+            password: this.createPassword,
+            identity: this.createIdentity
+          }, {
+            headers: {
+              token:this.token,
+            }
+          });
+          if (response.data.code === 200) {
+            alert('Account created successfully');
+            console.log(response.data.msg)
+          } else {
+            alert('Account creation failed');
+            console.log(response.data.msg);
+          }
+        } catch (error) {
+          alert('Account creation error');
+        }
+      },
+
+
+
+      async fetchAccounts() {
+        try {
+          const response = await axios.get('/_token/admin/list', {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            }
+          });
+          if (response.data.code === 200) {
+            this.accounts = response.data.rows;
+          } else {
+            alert('Failed to fetch accounts');
+          }
+        } catch (error) {
+          alert('Fetch accounts error');
+        }
+      },
+      async updateAccount() {
+        try {
+          const response = await axios.put('/_token/admin/update', {
+            id: this.updateId,
+            account: this.updateAccounter,
+            password: this.updatePassword,
+            identity: this.updateIdentity
+          }, {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            }
+          });
+          if (response.data.code === 200) {
+            alert('Account updated successfully');
+          } else {
+            alert('Account update failed');
+          }
+        } catch (error) {
+          alert('Account update error');
+        }
+      },
+      sendMsg() {
+        PubSub.publish('userEvent', this.token) // 发布消息
+        console.log(this.token)
+        this.$router.push({
+          path: '/SerchBooks'
+        })
+      }
+    }
+  };
+  </script>
 
 <style lang="scss" scoped>
 .login-container {

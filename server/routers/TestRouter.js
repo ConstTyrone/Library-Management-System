@@ -24,6 +24,3 @@ router.get("/test",async(req,res)=>{//回调函数 允许异步
 
 
 module.exports=router
-
-
-

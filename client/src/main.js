@@ -15,7 +15,9 @@ import {createPinia}from "pinia"
 import {router} from './common/router'
 import axios from 'axios'
 import {createDiscreteApi} from 'naive-ui'//https://www.naiveui.com/zh-CN/light/components/discrete
-import { AdminStore } from './stores/AdminStore'
+// import { AdminStore } from './stores/AdminStore'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 axios.defaults.baseURL="http://localhost:8080"//配置全局路径
 const { message, notification, dialog } = createDiscreteApi(['message', 'dialog', 'notification'])
@@ -36,12 +38,13 @@ app.provide("server_url", axios.defaults.baseURL )
 app.use(naive)
 app.use(createPinia())
 app.use(router)
+app.use(ElementPlus)
 
-//拦截器 全局自动识别token并加上去
-const adminStore=AdminStore()
-axios.interceptors.request.use((config)=>{
-    config.headers.token=adminStore.token
-    return config
-})
+// //拦截器 全局自动识别token并加上去
+// const adminStore=AdminStore()
+// axios.interceptors.request.use((config)=>{
+//     config.headers.token=adminStore.token
+//     return config
+// })
 
 app.mount('#app')
