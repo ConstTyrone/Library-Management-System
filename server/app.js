@@ -3,12 +3,12 @@
 "sqlite3" 
 "uuid" 
 */
-const express=require("express")
-const multer=require("multer")
-const app=express();
-const port=8080
-const path=require("path")
-const { db, genid } = require("./db/DbUtils")
+const express=require("express") // 引入 express 模块
+const multer=require("multer") // 引入 multer 模块，用于处理文件上传
+const app=express(); // 创建 express 应用实例
+const port=8080 // 设置服务器监听端口
+const path=require("path") // 引入 path 模块，用于处理和转换文件路径
+const { db, genid } = require("./db/DbUtils") // 引入自定义的数据库工具模块，包含数据库连接和生成唯一ID的函数
 
 
 //开放跨域请求
@@ -79,7 +79,7 @@ app.use("/user",require("./routers/UserRouter"))
 app.use("/book",require("./routers/BookRouter"))
 app.use("/current",require("./routers/CurrentLoanRouter"))
 app.use("/returned",require("./routers/ReturnedLoanRouter"))
-//app.use("/reader",require("./routers/ReaderRouter"))
+app.use("/reader",require("./routers/ReaderRouter"))
 
 app.get("/",(req,res)=>{
     res.send("helloworld")
