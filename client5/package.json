@@ -1,0 +1,32 @@
+{
+  "name": "client",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "axios": "^1.6.8",
+    "echarts": "^5.5.0",
+    "echarts-wordcloud": "^2.1.0",
+    "element-plus": "^2.7.6",
+    "pinia": "^2.1.7",
+    "pubsub-js": "^1.9.4",
+    "sass": "^1.76.0",
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.2"
+  },
+  "devDependencies": {
+    "@vicons/ionicons5": "^0.12.0",
+    "@vicons/utils": "^0.1.4",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "less": "^4.2.0",
+    "naive-ui": "^2.38.1",
+    "vfonts": "^0.0.3",
+    "vite": "^5.2.0"
+  }
+}
