@@ -33,7 +33,26 @@ router.post("/login", async (req, res) => {
     }
 
 })
-
+// 删除接口 /user/_token/admin/delete?title=xxx
+router.delete("/_token/admin/delete", async (req, res) => {//  /_token/delete
+    
+    let { account } = req.body;
+    const delete_sql = "DELETE FROM `User` WHERE `account` = ?"
+    let result = await db.async.run(delete_sql, [account])
+    if(result.err==null){
+        res.send({
+            code: 200,
+            msg: "删除成功"
+        })
+    }else{
+        console.log(result.err)
+        res.send({
+            code: 500,
+            msg: "删除失败"
+        })
+    }
+    
+})
 //管理员管理的创建账户路由，可以创建管理员或者读者账户
 router.put("/_token/admin/add", async (req, res) => {
 
@@ -52,10 +71,6 @@ router.put("/_token/admin/add", async (req, res) => {
         const insert_sql = "INSERT INTO `User` (`id`,`account`,`password`,`identity`) VALUES (?,?,?,?)"
         let params = [id,account,password,identity]
         await db.async.run(insert_sql, params)
-
-        const insert_sql2 = "INSERT INTO `Reader` (`cardid`) VALUES (?)"
-        let params2 = [id]
-        await db.async.run(insert_sql2, params2)
 
         res.send({
             code: 200,
@@ -198,56 +213,6 @@ router.put("/_token/update", async (req, res) => {
         res.send({
             code: 500,
             msg: "修改失败"
-        })
-    }    
-
-})
-
-//用户的注销账户路由，需确认只能注销本人的账户
-router.delete("/_token/delete", async (req, res) => {
-
-    let { token } = req.headers;
-    let { id } = req.body    
-
-    try{
-        let user_info_sql = "SELECT * FROM `User` WHERE `token` = ?"
-        let userInfoResult = await db.async.all(user_info_sql, [token])
-        const user = userInfoResult.rows[0];
-        const real_id = user.id;
-
-        if (real_id != id) {
-            res.status(403).send({
-                code: 403,
-                msg: "无权注销他人账户"
-            });
-            return;
-        }
-    }catch (error) {
-        // 如果Token解析出错，返回错误信息
-        res.status(401).send({
-            code: 401,
-            msg: "无效的Token"
-        });
-        return;
-    }
-
-    const delete_sql = "DELETE FROM `User` WHERE `id` = ? "
-    let result = await db.async.run(delete_sql, [id])
-
-    const delete_sql2 = "DELETE FROM `Reader` WHERE `cardid` = ? "
-    let result2 = await db.async.run(delete_sql2, [id])
-
-    if (result.err == null && result2.err == null) {
-        res.send({
-            code: 200,
-            msg: "注销成功"
-        })
-    } else {
-        console.log(result.err)
-        console.log(result2.err)
-        res.send({
-            code: 500,
-            msg: "注销失败"
         })
     }    
 

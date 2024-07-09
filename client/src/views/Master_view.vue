@@ -52,7 +52,7 @@
                 <n-input v-model:value="BookLocation" placeholder="请输入价格"/>
               </n-form-item-row>
             </n-form>
-            <n-button @click="submit" type="primary" block secondary strong>
+            <n-button @click="addbooks" type="primary" block secondary strong>
               提交
             </n-button>
           </n-tab-pane>
@@ -155,7 +155,7 @@ const deleteBook = async (rowData) => {
 
       };
     
-    const submit =async()=>{
+    const addbooks =async()=>{
       try {
     // 使用 axios 发送 POST 请求到API
     const response = await axios.post("/book/_token/admin/add", {
@@ -234,7 +234,7 @@ const deleteBook = async (rowData) => {
         Author,
         BookNum,
         BookLocation,
-        submit,
+        addbooks,
         deleteBook,
       
         columns: createColumns(),

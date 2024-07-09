@@ -113,7 +113,16 @@
         }
       },
 
-
+      sendMsg() {
+        PubSub.publish('userEvent', this.token) // 发布消息
+        console.log(this.token)
+        this.$router.push({
+          path: '/SerchBooks'
+        })
+      }
+    }
+  };
+  </script>
 
       // async fetchAccounts() {
       //   try {
@@ -152,16 +161,7 @@
       //     alert('Account update error');
       //   }
       // },
-      sendMsg() {
-        PubSub.publish('userEvent', this.token) // 发布消息
-        console.log(this.token)
-        this.$router.push({
-          path: '/SerchBooks'
-        })
-      }
-    }
-  };
-  </script>
+
 
   <style lang="scss" scoped>
 .login-container {

@@ -145,7 +145,7 @@ const deleteUser = async (rowData) => {
       const hideAllComponents = () => {
       isAllComponentsVisible.value = false; // 切换显示状态
       isAllComponentsVisible2.value = true;
-      message.info("请输入图书信息。");
+      message.info("请输入账户信息。");
 
       };
       const createAccount = async () => {
@@ -223,7 +223,6 @@ const deleteUser = async (rowData) => {
   },
 
   });
-
   </script>
  
   <style lang="scss" scoped>

@@ -7,7 +7,7 @@ const { db, genid } = require("../db/DbUtils")
 router.post("/_token/admin/add", async (req, res) => {
 
     let { title, author, category, price, publisher, location } = req.body;
-    if( title == null){
+    if( title == ''){
         res.send({
             code: 500,
             msg: "添加失败：书名不能为空"
@@ -58,36 +58,6 @@ router.get("/_token/admin/list", async (req, res) => {
 
 })
 
-//查询bookid对应的书籍信息
-router.get("/_token/info", async (req, res) => {
-
-    let { bookid } = req.query;
-    const search_sql = "SELECT `bookid`,`title`,`author`,`category`,`price`,`publisher`,`location`,`borrowed_time`,`borrowable` FROM `Book` WHERE `bookid` = ?"
-    let { err, rows } = await db.async.all(search_sql, [bookid])
-
-    if (err == null) {
-        if(rows.length == 0){
-            res.send({
-                code: 500,
-                msg: "查询失败：书籍不存在"
-            })
-        }else{
-            res.send({
-                code: 200,
-                msg: "查询成功",
-                rows: rows[0]
-            })
-        }
-    } else {
-        console.log(err)
-        res.send({
-            code: 500,
-            msg: "查询失败"
-        })
-    }
-
-})
-
 //查询 包含模糊查询
 //目前只支持子查询title和borrowable，其他的如果要增加我再改
 //虽然后端对传入数据的类型做了一定的限制，但前端必须做出更严谨的限制（重要）
@@ -103,10 +73,10 @@ router.get("/_token/search", async (req, res) => {
      */
     let { keyword, borrowable, page, pageSize } = req.query//query和body不一样！
 
-    page = page == '' ? 1 : page;//增加默认值
-    pageSize = pageSize == '' ? 5 : pageSize//默认每页5本书
+    page = page == null ? 1 : page;//增加默认值
+    pageSize = pageSize == null ? 5 : pageSize//默认每页5本书
 
-    keyword = keyword == '' ? "" : keyword
+    keyword = keyword == null ? "" : keyword
 
     let params = []//查询参数
     let whereSqls = []//查询语句的条件
@@ -166,13 +136,12 @@ router.get("/_token/search", async (req, res) => {
     }
 
 })
-
-// 删除接口 /book/_token/admin/delete?id=xxx
+// 删除接口 /book/_token/admin/delete?title=xxx
 router.delete("/_token/admin/delete", async (req, res) => {//  /_token/delete
     
-    let { bookid } = req.body;
-    const delete_sql = "DELETE FROM `Book` WHERE `bookid` = ?"
-    let result = await db.async.run(delete_sql, [bookid])
+    let { title } = req.body;
+    const delete_sql = "DELETE FROM `Book` WHERE `title` = ?"
+    let result = await db.async.run(delete_sql, [title])
     if(result.err==null){
         res.send({
             code: 200,
